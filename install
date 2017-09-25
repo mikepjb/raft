@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+cd $(dirname $BASH_SOURCE)
+BASE=$(pwd)
+
+function symlink_emacs_configuration {
+    mkdir -p ~/.emacs.d
+    ln -sfv $BASE/init.el ~/.emacs.d/init.el
+    [ -L ~/.emacs.d/lib ] && unlink ~/.emacs.d/lib
+    ln -sfv $BASE/lib ~/.emacs.d/lib
+}
+
+symlink_emacs_configuration
