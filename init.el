@@ -7,13 +7,16 @@
 
 (setq-default
  column-number-mode t
+ indent-tabs-mode nil
  buffers-menu-max-size 30
  indent-tabs-mode nil
  delete-selection-mode t
  make-backup-files nil
  set-mark-command-repeat-pop t
  truncate-lines nil
- show-trailing-whitespace t)
+ vc-follow-symlinks nil
+ scroll-step 1
+ scroll-conservatively 10000)
 
 (add-to-list 'load-path "~/.emacs.d/lib")
 (setq custom-theme-load-path (list "~/.emacs.d/lib"))
@@ -36,6 +39,19 @@
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-c i") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-j") 'newline)
+(global-set-key (kbd "M-g") 'mark-paragraph)
+(global-set-key (kbd "M-k") 'paredit-forward-barf-sexp)
+(global-set-key (kbd "M-l") 'paredit-forward-slurp-sexp)
+(global-set-key (kbd "M-j") 'join-line)
+
+(defun code-hook ()
+  (setq-local show-trailing-whitespace t))
+
+(dolist (hook
+         '(ruby-mode-hook
+           clojure-mode-hook
+           emacs-lisp-mode-hook))
+  (add-hook hook 'code-hook))
 
 (ido-mode t)
 (setq ido-enable-flex-matching t)
@@ -58,6 +74,11 @@
          nil
          t))))))
 
+(defun compile-in-project ()
+  (interactive)
+  (let ((default-directory (shell-command-to-string
+                            "echo -ne $(git rev-parse --show-toplevel || echo \".\")")))
+    (call-interactively #'compile)))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -66,8 +87,10 @@
 
 (require 'use-package)
 
+(use-package diminish :ensure t)
 (use-package paredit
   :ensure t
+  :diminish paredit-mode
   :init
   (progn
     (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
@@ -99,18 +122,16 @@
   :mode (("\\.markdown$" . markdown-mode)
          ("\\.md$" . markdown-mode))
   :init (add-hook 'markdown-mode-hook 'auto-fill-mode))
+(use-package ag :ensure t)
+(use-package inf-ruby :ensure t)
+(use-package company :ensure t :diminish company-mode)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (ess rainbow-delimiters rainbow-delimiters-mode rainbow-delimters-mode clj-refactor cider markdown-mode yaml-mode clojure-mode js2-mode true))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(if window-system (set-exec-path-from-shell-PATH))
