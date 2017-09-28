@@ -19,11 +19,10 @@
  custom-theme-load-path (list "~/.emacs.d/lib")
  custom-file "~/.emacs.d/custom.el")
 
-;; (require 'utility)
-
 (load custom-file 'noerror)
 
 (add-to-list 'load-path "~/.emacs.d/lib")
+(require 'utility)
 
 (load-theme 'night t)
 
