@@ -16,8 +16,12 @@
  vc-follow-symlinks nil
  scroll-step 1
  scroll-conservatively 10000
+ c-basic-offset 2
+ ns-use-native-fullscreen nil
  custom-theme-load-path (list "~/.emacs.d/lib")
- custom-file "~/.emacs.d/custom.el")
+ custom-file "~/.emacs.d/custom.el"
+ backup-directory-alist `((".*" . ,temporary-file-directory))
+ auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (load custom-file 'noerror)
 
@@ -47,6 +51,8 @@
 (global-set-key (kbd "M-l") 'paredit-forward-slurp-sexp)
 (global-set-key (kbd "M-j") (lambda () (interactive) (next-line) (join-line)))
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
+(global-set-key (kbd "M-'") 'ido-find-in-project)
+(global-set-key (kbd "C-c l") 'magit-log-head)
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
@@ -106,7 +112,8 @@
     (add-hook 'clojure-mode-hook 'paredit-mode)
     (add-hook 'clojurescript-mode-hook 'paredit-mode)
     (add-hook 'clojurec-mode-hook 'paredit-mode)
-    (add-hook 'cider-repl-mode-hook 'paredit-mode)))
+    (add-hook 'cider-repl-mode-hook 'paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)))
 (use-package clojure-mode
   :ensure t
   :mode ("\\.edn\\'")
@@ -128,5 +135,10 @@
   :mode (("\\.markdown$" . markdown-mode)
          ("\\.md$" . markdown-mode))
   :init (add-hook 'markdown-mode-hook 'auto-fill-mode))
+(use-package magit :ensure t)
+(use-package rainbow-mode
+  :ensure t
+  :config (add-hook 'css-mode-hook 'rainbow-mode))
+(use-package rainbow-delimiters :ensure t)
 
 (if window-system (set-exec-path-from-shell-PATH))
