@@ -1,12 +1,11 @@
 (menu-bar-mode -1)
-(setq inhibit-startup-message t)
-
 (show-paren-mode 1)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (setq-default
  column-number-mode t
+ inhibit-startup-message t
  indent-tabs-mode nil
  buffers-menu-max-size 30
  indent-tabs-mode nil
@@ -16,10 +15,15 @@
  truncate-lines nil
  vc-follow-symlinks nil
  scroll-step 1
- scroll-conservatively 10000)
+ scroll-conservatively 10000
+ custom-theme-load-path (list "~/.emacs.d/lib")
+ custom-file "~/.emacs.d/custom.el")
+
+;; (require 'utility)
+
+(load custom-file 'noerror)
 
 (add-to-list 'load-path "~/.emacs.d/lib")
-(setq custom-theme-load-path (list "~/.emacs.d/lib"))
 
 (load-theme 'night t)
 
@@ -42,7 +46,8 @@
 (global-set-key (kbd "M-g") 'mark-paragraph)
 (global-set-key (kbd "M-k") 'paredit-forward-barf-sexp)
 (global-set-key (kbd "M-l") 'paredit-forward-slurp-sexp)
-(global-set-key (kbd "M-j") 'join-line)
+(global-set-key (kbd "M-j") (lambda () (interactive) (next-line) (join-line)))
+(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
@@ -88,6 +93,11 @@
 (require 'use-package)
 
 (use-package diminish :ensure t)
+(use-package ag :ensure t)
+(use-package inf-ruby :ensure t)
+(use-package company :ensure t :diminish company-mode)
+(use-package go-mode :ensure t)
+(use-package js2-mode :ensure t :mode ("\\.js\\'"))
 (use-package paredit
   :ensure t
   :diminish paredit-mode
@@ -98,9 +108,6 @@
     (add-hook 'clojurescript-mode-hook 'paredit-mode)
     (add-hook 'clojurec-mode-hook 'paredit-mode)
     (add-hook 'cider-repl-mode-hook 'paredit-mode)))
-(use-package js2-mode
-  :ensure t
-  :mode ("\\.js\\'"))
 (use-package clojure-mode
   :ensure t
   :mode ("\\.edn\\'")
@@ -122,16 +129,5 @@
   :mode (("\\.markdown$" . markdown-mode)
          ("\\.md$" . markdown-mode))
   :init (add-hook 'markdown-mode-hook 'auto-fill-mode))
-(use-package ag :ensure t)
-(use-package inf-ruby :ensure t)
-(use-package company :ensure t :diminish company-mode)
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
-
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
 
 (if window-system (set-exec-path-from-shell-PATH))
