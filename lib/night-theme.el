@@ -18,7 +18,8 @@
       (night-magenta-2 "#996cda")
       (night-cyan-1 "#6bd9ed")
       (night-cyan-2 "#13a1e7")
-      (night-white-1 "#f8f8f2"))
+      (night-white-1 "#f8f8f2")
+      (night-hl-line "#2b2d2e"))
 
  (custom-theme-set-faces
    'night
@@ -110,27 +111,6 @@
 
    `(gui-element ((,class (:background ,night-black-2 :foreground ,night-blue-2))))
 
-   ;;; newsticker
-   ;; These are currently placeholders that probably look terrible.
-   ;; Someone who uses newsticker is welcome to change these
-   `(newsticker-date-face ((,class (:foreground ,night-black-1))))
-   `(newsticker-default-face ((,class (:foreground ,night-white-1))))
-   `(newsticker-enclosure-face ((,class (:foreground ,night-green-1))))
-   `(newsticker-extra-face ((,class (:foreground ,night-black-2 :height 0.8))))
-   `(newsticker-feed-face ((,class (:foreground ,night-white-1))))
-   `(newsticker-immortal-item-face ((,class (:foreground ,night-green-1))))
-   `(newsticker-new-item-face ((,class (:foreground ,night-blue-1))))
-   `(newsticker-obsolete-item-face ((,class (:foreground ,night-red-1))))
-   `(newsticker-old-item-face ((,class (:foreground ,night-black-2))))
-   `(newsticker-statistics-face ((,class (:foreground ,night-white-1))))
-   `(newsticker-treeview-face ((,class (:foreground ,night-white-1))))
-   `(newsticker-treeview-immortal-face ((,class (:foreground ,night-green-1))))
-   `(newsticker-treeview-listwindow-face ((,class (:foreground ,night-white-1))))
-   `(newsticker-treeview-new-face ((,class (:foreground ,night-blue-1 :weight bold))))
-   `(newsticker-treeview-obsolete-face ((,class (:foreground ,night-red-1))))
-   `(newsticker-treeview-old-face ((,class (:foreground ,night-black-2))))
-   `(newsticker-treeview-selection-face ((,class (:foreground ,night-yellow-1))))
-
    ;;; external
 
    ;; full-ack
@@ -138,15 +118,6 @@
    `(ack-file ((,class (:foreground ,night-blue-1))))
    `(ack-line ((,class (:foreground ,night-yellow-1))))
    `(ack-match ((,class (:foreground ,night-yellow-2 :background ,night-black-1 :weigth bold))))
-
-   ;; auctex
-   `(font-latex-bold ((,class (:inherit bold))))
-   `(font-latex-warning ((,class (:inherit font-lock-warning))))
-   `(font-latex-sedate ((,class (:foreground ,night-yellow-1 :weight bold))))
-   `(font-latex-string ((,class (:foreground ,night-green-1))))
-   `(font-latex-title-4 ((,class (:inherit variable-pitch :weight bold))))
-   `(font-latex-sectioning-0 ((,class (:foreground ,night-blue-1 :background ,night-black-1 :scale 1.5))))
-   `(font-latex-sectioning-1 ((,class (:foreground ,night-blue-1 :background ,night-black-1 :scale 1.5))))
 
    ;; auto-complete
    `(ac-completion-face ((,class (:background ,night-black-2 :underline t))))
@@ -159,17 +130,17 @@
 
    `(window-number-face ((,class (:background ,night-black-2 :foreground ,night-blue-1))))
 
-;;    ;; company-mode
-;;    `(company-tooltip ((,class (:background ,radiant-gray-2 :foreground ,radiant-yellow))))
-;;    `(company-tooltip-common ((,class (:inherit company-tooltip :foreground ,radiant-blue))))
-;;    `(company-tooltip-common-selection ((,class (:inherit company-tooltip-selection :foreground ,radiant-blue))))
-;;    `(company-tooltip-selection ((,class (:foreground ,radiant-black :background ,radiant-pink-1))))
-;;    `(company-tooltip-annotation ((,class (:inherit company-tooltip :foreground ,radiant-black-3))))
-;;    `(company-scrollbar-fg ((,class (:background ,radiant-black-3))))
-;;    `(company-scrollbar-bg ((,class (:background ,radiant-gray-5))))
-;;    `(company-preview ((,class (:foreground ,radiant-gray :background ,radiant-pink-1))))
-;;    `(company-preview-common ((,class (:foreground ,radiant-gray :background ,radiant-pink-1))))
-   
+   ;; company-mode
+   `(company-tooltip ((,class (:background ,night-black-2 :foreground ,night-yellow-1))))
+   `(company-tooltip-common ((,class (:inherit company-tooltip :foreground ,night-blue-1))))
+   `(company-tooltip-common-selection ((,class (:inherit company-tooltip-selection :foreground ,night-blue-1))))
+   `(company-tooltip-selection ((,class (:foreground ,night-black-1 :background ,night-red-1))))
+   `(company-tooltip-annotation ((,class (:inherit company-tooltip :foreground ,night-black-2))))
+   `(company-scrollbar-fg ((,class (:background ,night-black-2))))
+   `(company-scrollbar-bg ((,class (:background ,night-black-2))))
+   `(company-preview ((,class (:foreground ,night-black-2 :background ,night-red-1))))
+   `(company-preview-common ((,class (:foreground ,night-black-1 :background ,night-red-1))))
+
 ;;    ;; diff
 ;;    `(diff-added ((,class (:foreground ,radiant-green))))
 ;;    `(diff-changed ((,class (:foreground ,radiant-yellow))))
@@ -320,15 +291,15 @@
 ;;    `(helm-visible-mark ((,class (:foreground ,radiant-bg :background ,radiant-yellow-2))))
 ;;    `(helm-candidate-number ((,class (:foreground ,radiant-green+4 :background ,radiant-bg-1))))
 
-;;    ;; hl-line-mode
-;;    `(hl-sexp-face ((,class (:background ,radiant-gray-2))))
-;;    `(hl-line ((,class (:background ,radiant-gray))))
+   ;; hl-line-mode
+   `(hl-sexp-face ((,class (:background ,night-hl-line))))
+   `(hl-line ((,class (:background ,night-hl-line))))
 
    ;; ido-mode
-   `(ido-first-match ((,class (:foreground ,night-magenta-1 :background ,night-black-1))))
-   `(ido-only-match ((,class (:foreground ,night-magenta-1 :background ,night-black-1))))
+   `(ido-first-match ((,class (:foreground ,night-red-1 :background ,night-black-1))))
+   `(ido-only-match ((,class (:foreground ,night-red-1 :background ,night-black-1))))
    `(ido-subdir ((,class (:foreground ,night-black-2 :backgroun ,night-black-1))))
-   `(ido-indicator ((,class (:foreground ,night-black-1 :background ,night-magenta-1))))
+   `(ido-indicator ((,class (:foreground ,night-black-1 :background ,night-yellow-1))))
 
 ;;    ;; js2-mode
 ;;    `(js2-warning-face ((,class (:underline ,radiant-orange))))
@@ -482,11 +453,6 @@
 ;;    `(mew-face-eof-message ((,class (:foreground ,radiant-green))))
 ;;    `(mew-face-eof-part ((,class (:foreground ,radiant-yellow))))
 
-;;    ;; mic-paren
-;;    `(paren-face-match ((,class (:foreground ,radiant-cyan :background ,radiant-bg :weight bold))))
-;;    `(paren-face-mismatch ((,class (:foreground ,radiant-bg :background ,radiant-magenta :weight bold))))
-;;    `(paren-face-no-match ((,class (:foreground ,radiant-bg :background ,radiant-red :weight bold))))
-
 ;;    ;; nav
 ;;    `(nav-face-heading ((,class (:foreground ,radiant-yellow))))
 ;;    `(nav-face-button-num ((,class (:foreground ,radiant-cyan))))
@@ -565,10 +531,10 @@
 ;;    `(racket-selfeval-face ((t (:inherit font-lock-type-face))))
 
    ;; rainbow-delimiters
-   `(rainbow-delimiters-depth-1-face ((,class (:foreground ,night-green-1))))
-   `(rainbow-delimiters-depth-2-face ((,class (:foreground ,night-yellow-1))))
-   `(rainbow-delimiters-depth-3-face ((,class (:foreground ,night-magenta-1))))
-   `(rainbow-delimiters-depth-4-face ((,class (:foreground ,night-yellow-1))))
+   `(rainbow-delimiters-depth-1-face ((,class (:foreground ,night-yellow-1))))
+   `(rainbow-delimiters-depth-2-face ((,class (:foreground ,night-yellow-2))))
+   `(rainbow-delimiters-depth-3-face ((,class (:foreground ,night-green-1))))
+   `(rainbow-delimiters-depth-4-face ((,class (:foreground ,night-green-2))))
    `(rainbow-delimiters-depth-5-face ((,class (:foreground ,night-green-1))))
    `(rainbow-delimiters-depth-6-face ((,class (:foreground ,night-cyan-1))))
    `(rainbow-delimiters-depth-7-face ((,class (:foreground ,night-yellow-2))))
@@ -599,7 +565,7 @@
 
    ;; show-paren
    `(show-paren-mismatch ((,class (:foreground ,night-red-1 :background ,night-black-1))))
-   `(show-paren-match ((,class (:foreground ,night-cyan-1))))
+   `(show-paren-match ((,class (:foreground ,night-blue-1))))
 
 ;;    `(naeu-green-face ((,class (:foreground ,radiant-green :background ,radiant-black))))
 ;;    `(naeu-pink-face ((,class (:foreground ,radiant-pink-1 :background ,radiant-black))))

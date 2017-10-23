@@ -119,7 +119,12 @@
   :mode ("\\.edn\\'")
   :config
   (progn
-    (use-package cider :ensure t)
+    (use-package cider
+      :ensure t
+      :config (setq cider-boot-parameters "dev")
+      :bind (("C-]" . cider-find-dwim)
+             ;; ("C-c r" . (cider-run "(user/reset"))
+             ("C-c b" . cider-eval-buffer)))
     (use-package clj-refactor :ensure t)))
 (use-package ess
   :ensure t
