@@ -14,6 +14,9 @@
  set-mark-command-repeat-pop t
  truncate-lines nil
  vc-follow-symlinks nil
+ ring-bell-function 'ignore
+ inferior-lisp-program "sbcl"
+ slime-contribs '(slime-fancy)
  scroll-step 1
  scroll-conservatively 10000
  c-basic-offset 2
@@ -23,12 +26,11 @@
  backup-directory-alist `((".*" . ,temporary-file-directory))
  auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
+(load-theme 'night t)
 (load custom-file 'noerror)
 
 (add-to-list 'load-path "~/.emacs.d/lib")
 (require 'utility)
-
-(load-theme 'night t)
 
 (if (display-graphic-p)
     (progn
@@ -44,15 +46,17 @@
         (set-frame-font "Inconsolata Bold 19"))))
 
 (global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "C-c i") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "C-c i") (aif (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-j") 'newline)
 (global-set-key (kbd "M-g") 'mark-paragraph)
 (global-set-key (kbd "M-k") 'paredit-forward-barf-sexp)
 (global-set-key (kbd "M-l") 'paredit-forward-slurp-sexp)
-(global-set-key (kbd "M-j") (lambda () (interactive) (next-line) (join-line)))
+(global-set-key (kbd "M-j") (aif (next-line) (join-line)))
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-set-key (kbd "M-'") 'ido-find-in-project)
 (global-set-key (kbd "C-c l") 'magit-log-head)
+(global-set-key (kbd "C-c 1") (aif (set-frame-size (selected-frame) 160 50)))
+(global-set-key (kbd "C-c 2") (aif (set-frame-size (selected-frame) 100 40)))
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
@@ -65,6 +69,14 @@
 
 (ido-mode t)
 (setq ido-enable-flex-matching t)
+
+(defun bind-ido-keys ()
+  "Keybindings for ido mode."
+  (define-key ido-completion-map (kbd "`") 'ido-exit-minibuffer)
+  (define-key ido-completion-map (kbd "C-w") 'ido-delete-backward-word-updir)
+  (define-key ido-completion-map (kbd "SPC") 'ido-exit-minibuffer)
+  (define-key ido-completion-map (kbd "TAB") 'ido-exit-minibuffer))
+(add-hook 'ido-setup-hook #'bind-ido-keys)
 
 (defun ido-find-in-project ()
   (interactive)
@@ -109,11 +121,14 @@
   :init
   (progn
     (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+    (add-hook 'lisp-mode-hook 'paredit-mode)
     (add-hook 'clojure-mode-hook 'paredit-mode)
     (add-hook 'clojurescript-mode-hook 'paredit-mode)
     (add-hook 'clojurec-mode-hook 'paredit-mode)
     (add-hook 'cider-repl-mode-hook 'paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)))
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))))
+(use-package slime :ensure t)
 (use-package clojure-mode
   :ensure t
   :mode ("\\.edn\\'")
