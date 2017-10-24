@@ -17,11 +17,15 @@
  ring-bell-function 'ignore
  inferior-lisp-program "sbcl"
  slime-contribs '(slime-fancy)
+ tab-always-indent 'complete
+ flycheck-disabled-checkers '(emacs-lisp-checkdoc)
  scroll-step 1
  scroll-conservatively 10000
  c-basic-offset 2
  tab-width 2
+ hl-line-sticky-flag nil
  ns-use-native-fullscreen nil
+ compilation-scroll-output t
  custom-theme-load-path (list "~/.emacs.d/lib")
  custom-file "~/.emacs.d/custom.el"
  backup-directory-alist `((".*" . ,temporary-file-directory))
@@ -59,6 +63,7 @@
 (global-set-key (kbd "C-c 1") (aif (set-frame-size (selected-frame) 160 50)))
 (global-set-key (kbd "C-c 2") (aif (set-frame-size (selected-frame) 100 40)))
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
+(global-set-key (kbd "C-c g") 'magit-status)
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
@@ -70,7 +75,10 @@
   (add-hook hook 'code-hook))
 
 (ido-mode t)
-(setq ido-enable-flex-matching t)
+
+(setq
+ ido-enable-flex-matching t
+ ido-everywhere t)
 
 (defun bind-ido-keys ()
   "Keybindings for ido mode."
@@ -104,6 +112,13 @@
                             "echo -ne $(git rev-parse --show-toplevel || echo \".\")")))
     (call-interactively #'compile)))
 
+(with-eval-after-load 'compile
+  (require 'ansi-color)
+  (defun mikepjb/colourise-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'mikepjb/colourise-compilation-buffer))
+
 (setq package-enable-at-startup nil)
 (package-initialize)
 
@@ -114,7 +129,10 @@
 (use-package diminish :ensure t)
 (use-package ag :ensure t)
 (use-package inf-ruby :ensure t)
-(use-package company :ensure t :diminish company-mode)
+(use-package company
+  :ensure t
+  :config (add-hook 'after-init-hook 'global-company-mode)
+  :diminish company-mode)
 (use-package go-mode :ensure t)
 (use-package js2-mode :ensure t :mode ("\\.js\\'"))
 (use-package paredit
@@ -143,6 +161,10 @@
              ;; ("C-c r" . (cider-run "(user/reset"))
              ("C-c b" . cider-eval-buffer)))
     (use-package clj-refactor :ensure t)))
+(use-package flycheck
+  :ensure t
+  :config (global-flycheck-mode)
+  :diminish flycheck-mode)
 (use-package ess
   :ensure t
   :init (require 'ess-site)
@@ -162,5 +184,6 @@
   :ensure t
   :config (add-hook 'css-mode-hook 'rainbow-mode))
 (use-package rainbow-delimiters :ensure t)
+(use-package web-mode :ensure t)
 
 (if window-system (set-exec-path-from-shell-PATH))
