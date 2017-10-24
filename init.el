@@ -20,6 +20,7 @@
  scroll-step 1
  scroll-conservatively 10000
  c-basic-offset 2
+ tab-width 2
  ns-use-native-fullscreen nil
  custom-theme-load-path (list "~/.emacs.d/lib")
  custom-file "~/.emacs.d/custom.el"
@@ -57,6 +58,7 @@
 (global-set-key (kbd "C-c l") 'magit-log-head)
 (global-set-key (kbd "C-c 1") (aif (set-frame-size (selected-frame) 160 50)))
 (global-set-key (kbd "C-c 2") (aif (set-frame-size (selected-frame) 100 40)))
+(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
