@@ -8,4 +8,13 @@
     Mainly for use when binding a key to a non-interactive function."
     `(lambda () (interactive) ,@forms))
 
+(defun backward-kill-word-or-region (prefix)
+  "kill-region if active, otherwise backward-kill-word"
+  (interactive "P")
+  (if (and (mark) (use-region-p))
+      (kill-region (min (point) (mark)) (max (point) (mark)))
+    (backward-kill-word 1)))
+
+(autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
+
 (provide 'utility)

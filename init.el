@@ -12,17 +12,27 @@
  delete-selection-mode t
  make-backup-files nil
  set-mark-command-repeat-pop t
+ case-fold-search t
  truncate-lines nil
  vc-follow-symlinks nil
  ring-bell-function 'ignore
  inferior-lisp-program "sbcl"
  slime-contribs '(slime-fancy)
+ hippie-expand-try-functions-list
+ '(try-complete-file-name-partially
+   try-complete-file-name
+   try-expand-dabbrev
+   try-expand-dabbrev-all-buffers
+   try-expand-dabbrev-from-kill)
  tab-always-indent 'complete
  flycheck-disabled-checkers '(emacs-lisp-checkdoc)
  scroll-step 1
  scroll-conservatively 10000
  c-basic-offset 2
  tab-width 2
+ js2-basic-offset 2
+ js2-mode-show-strict-warnings nil
+ mac-command-modifier 'meta
  hl-line-sticky-flag nil
  ns-use-native-fullscreen nil
  compilation-scroll-output t
@@ -64,6 +74,13 @@
 (global-set-key (kbd "C-c 2") (aif (set-frame-size (selected-frame) 100 40)))
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-set-key (kbd "C-c g") 'magit-status)
+(global-set-key (kbd "C-h") (aif (backward-delete-char-untabify 1)))
+(global-set-key (kbd "C-c h") help-map)
+(global-set-key (kbd "C-c c") 'compile-in-project)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "C-w") 'backward-kill-word-or-region)
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-c p") (aif (shell-command "acpi")))
 
 (defun code-hook ()
   (setq-local show-trailing-whitespace t))
@@ -147,7 +164,8 @@
     (add-hook 'clojurec-mode-hook 'paredit-mode)
     (add-hook 'cider-repl-mode-hook 'paredit-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-    (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))))
+    (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1))))
+  :config (define-key paredit-mode-map (kbd "C-h") 'paredit-backward-delete))
 (use-package slime :ensure t)
 (use-package clojure-mode
   :ensure t
@@ -183,7 +201,18 @@
 (use-package rainbow-mode
   :ensure t
   :config (add-hook 'css-mode-hook 'rainbow-mode))
-(use-package rainbow-delimiters :ensure t)
+(use-package rainbow-delimiters
+  :ensure t
+  :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config (global-undo-tree-mode))
+(use-package expand-region
+  :ensure t
+  :config (global-set-key (kbd "C-=") 'er/expand-region))
 (use-package web-mode :ensure t)
+(use-package json-mode :ensure t)
+(use-package js2-mode :ensure t :mode ("\\.js\\'"))
 
 (if window-system (set-exec-path-from-shell-PATH))
